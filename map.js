@@ -11,41 +11,41 @@
 // ----------------------
 
 var platform = new H.service.Platform({
-  apikey: ""
-});
+  apikey: 'oZfqHHpjtfm4ttC7SAMUkggX8REuSnCAi7AFLYdiccE'
+})
 
 // Obtain the default map types from the platform object
-var maptypes = platform.createDefaultLayers();
+var maptypes = platform.createDefaultLayers()
 
 // Instantiate (and display) a map object:
-var map;
-initmap();
+var map
+initmap()
 
 function initmap() {
-  var allowGeolocation = false;
-  var userlat = 0;
-  var userlong = 0;
+  var allowGeolocation = false
+  var userlat = 0
+  var userlong = 0
   if (navigator.geolocation) {
-    allowGeolocation = true;
+    allowGeolocation = true
     navigator.geolocation.getCurrentPosition(position => {
-      console.log(position.coords.latitude, position.coords.longitude);
-      userlat = position.coords.latitude;
-      userlong = position.coords.longitude;
+      console.log(position.coords.latitude, position.coords.longitude)
+      userlat = position.coords.latitude
+      userlong = position.coords.longitude
 
-      console.log(userlat, userlong);
+      console.log(userlat, userlong)
 
       map = new H.Map(
-        document.getElementById("mapContainer"),
+        document.getElementById('mapContainer'),
         maptypes.vector.normal.map,
         {
           zoom: 18,
           center: { lng: userlong, lat: userlat }
         }
-      );
-      const marker = new H.map.Marker({ lng: userlong, lat: userlat });
-      map.addObject(marker);
-    });
+      )
+      const marker = new H.map.Marker({ lng: userlong, lat: userlat })
+      map.addObject(marker)
+    })
   } else {
-    console.error("Geolocation is not supported by this browser!");
+    console.error('Geolocation is not supported by this browser!')
   }
 }
