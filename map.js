@@ -1,18 +1,7 @@
-//  getting geolocation
-
-// object returned :
-// latitude: 37.790638699999995
-// longitude: -122.390079
-// altitude: null
-// accuracy: 7725
-// altitudeAccuracy: null
-// heading: null
-// speed: null
-// ----------------------
-
 var platform = new H.service.Platform({
   apikey: ""
 });
+var geocoder = platform.getGeocodingService();
 
 // Obtain the default map types from the platform object
 var maptypes = platform.createDefaultLayers();
@@ -22,27 +11,26 @@ var map;
 initmap();
 
 function initmap() {
-  var allowGeolocation = false;
-  var userlat = 0;
-  var userlong = 0;
   if (navigator.geolocation) {
-    allowGeolocation = true;
     navigator.geolocation.getCurrentPosition(position => {
-      console.log(position.coords.latitude, position.coords.longitude);
-      userlat = position.coords.latitude;
-      userlong = position.coords.longitude;
-
-      console.log(userlat, userlong);
-
+      // console.log(position.coords.latitude, position.coords.longitude);
       map = new H.Map(
         document.getElementById("mapContainer"),
         maptypes.vector.normal.map,
         {
           zoom: 18,
-          center: { lng: userlong, lat: userlat }
+          center: {
+            lng: position.coords.longitude,
+            lat: position.coords.latitude
+          }
         }
       );
-      const marker = new H.map.Marker({ lng: userlong, lat: userlat });
+    });
+    navigator.geolocation.watchPosition(function(position) {
+      const marker = new H.map.Marker({
+        lng: position.coords.longitude,
+        lat: position.coords.latitude
+      });
       map.addObject(marker);
     });
   } else {
