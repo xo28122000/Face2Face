@@ -44,17 +44,27 @@ function initmap() {
       makeMapInteractive(map, maptypes);
       createNewUser(long, lat);
     });
-    navigator.geolocation.watchPosition(function(position) {
-      long = position.coords.longitude;
-      lat = position.coords.latitude;
 
-      const marker = new H.map.Marker({
-        lng: long,
-        lat: lat,
+    setInterval(() => {
+      navigator.geolocation.getCurrentPosition((position) => {
+        long = position.coords.longitude;
+        lat = position.coords.latitude;
+
+        console.log(long, lat);
+
+        const marker = new H.map.Marker({
+          lng: long,
+          lat: lat,
+        });
+        map.addObject(marker);
+        pushNewLocation(long, lat);
       });
-      map.addObject(marker);
-      pushNewLocation(long, lat);
-    });
+    }, 1000);
+    // navigator.geolocation.watchPosition(function(position) {
+    //   long = position.coords.longitude;
+    //   lat = position.coords.latitude;
+    //   pushNewLocation(long, lat);
+    // });
   } else {
     console.error('Geolocation is not supported by this browser!');
   }
@@ -73,3 +83,11 @@ document.getElementById('startSearchButton').addEventListener('click', () => {
 
   currentlySearching = !currentlySearching;
 });
+
+$(window).on('beforeunload', () => {
+  stopSearch();
+});
+
+window.onbeforeunload = () => {
+  stopSearch();
+};
