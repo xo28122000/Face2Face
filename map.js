@@ -4,11 +4,13 @@ import {
   startSearch,
   createNewUser,
   pushNewLocation,
+  stopSearch,
 } from './search-functions.js';
 import { MVRS_API_KEY } from './env.js';
 
 let long;
 let lat;
+let currentlySearching = false;
 
 var platform = new H.service.Platform({
   apikey: MVRS_API_KEY,
@@ -59,5 +61,15 @@ function initmap() {
 }
 
 document.getElementById('startSearchButton').addEventListener('click', () => {
-  startSearch(long, lat);
+  if (currentlySearching) {
+    stopSearch();
+    console.log('Ending Search');
+    document.getElementById('startSearchButton').innerHTML = 'START';
+  } else {
+    startSearch(long, lat);
+    console.log('Starting Search');
+    document.getElementById('startSearchButton').innerHTML = 'STOP';
+  }
+
+  currentlySearching = !currentlySearching;
 });

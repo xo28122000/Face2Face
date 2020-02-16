@@ -3,6 +3,9 @@ import { BASE_URL } from './env.js';
 let userId;
 let isSearching = false;
 
+let lastLong = 0;
+let lastLat = 0;
+
 const createNewUser = (long, lat) => {
   console.log(long, lat);
   fetch(`${BASE_URL}/api/newuser`, {
@@ -23,6 +26,8 @@ const createNewUser = (long, lat) => {
 };
 
 const pushNewLocation = (long, lat) => {
+  lastLong = long;
+  lastLat = lat;
   if (!isSearching) return;
   if (!userId) {
     console.warn('Would send new location, but no userId found');
@@ -42,11 +47,11 @@ const pushNewLocation = (long, lat) => {
     .then((response) => {
       return response.json();
     })
-    .then((isnear) => {
-      if (isnear) {
+    .then((obj) => {
+      if (obj.isnear) {
         alert('Found someone!');
       }
-      console.log(isnear);
+      console.log(obj.isnear);
     })
     .catch((err) => console.log(err));
 };
@@ -63,17 +68,19 @@ const startSearch = () => {
     .then((response) => {
       return response.json();
     })
-    .then((isnear) => {
+    .then((obj) => {
       isSearching = true;
-      if (isnear) {
+      if (obj.isnear) {
         alert('Found someone!');
       }
-      console.log(isnear);
+      console.log(obj.isnear);
+      startSearchInterval();
     })
     .catch((err) => console.log(err));
 };
 
 const stopSearch = () => {
+  clearInterval();
   fetch(`${BASE_URL}/api/stopsearch`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -81,14 +88,21 @@ const stopSearch = () => {
       id: userId,
     }),
   })
-    .then((response) => {
-      return response.json();
-    })
     .then((_) => {
       isSearching = false;
       console.log('Stopped searching');
     })
     .catch((err) => console.log(err));
+};
+
+const startSearchInterval = () => {
+  setInterval(() => {
+    pushNewLocation(lastLong, lastLat);
+  }, 20000);
+};
+
+const stopSearchInterval = () => {
+  clearInterval();
 };
 
 export { startSearch, stopSearch, pushNewLocation, createNewUser };
