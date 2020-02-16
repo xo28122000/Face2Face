@@ -1,5 +1,10 @@
 import makeMapInteractive from './interactivity.js';
 import addListeners from './listeners.js';
+import {
+  startSearch,
+  createNewUser,
+  pushNewLocation,
+} from './search-functions.js';
 //  getting geolocation
 
 // object returned :
@@ -27,27 +32,34 @@ initmap();
 function initmap() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition((position) => {
+      const long = position.coords.longitude;
+      const lat = position.coords.latitude;
       map = new H.Map(
         document.getElementById('mapContainer'),
         maptypes.vector.normal.map,
         {
           zoom: 18,
           center: {
-            lng: position.coords.longitude,
-            lat: position.coords.latitude,
+            lng: long,
+            lat: lat,
           },
         }
       );
 
       addListeners(map);
       makeMapInteractive(map, maptypes);
+      createNewUser(long, lat);
     });
     navigator.geolocation.watchPosition(function(position) {
+      const long = position.coords.longitude;
+      const lat = position.coords.latitude;
+
       const marker = new H.map.Marker({
-        lng: position.coords.longitude,
-        lat: position.coords.latitude,
+        lng: long,
+        lat: lat,
       });
       map.addObject(marker);
+      pushNewLocation(long, lat);
     });
   } else {
     console.error('Geolocation is not supported by this browser!');
