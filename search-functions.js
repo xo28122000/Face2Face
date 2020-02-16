@@ -1,18 +1,22 @@
-const baseUrl = 'http://10.3.17.13:5000';
+import { BASE_URL } from './env.js';
 
 let userId;
 
 const createNewUser = (long, lat) => {
-  fetch(`${baseUrl}/api/newUser?long=${long}&lat=${lat}`)
+  console.log(long, lat);
+  fetch(`${BASE_URL}/api/newuser`, {
+    method: 'POST',
+    body: JSON.stringify({ long, lat }),
+  })
     .then((response) => {
       return response.json();
     })
     .then((newUser) => {
       console.log(newUser);
+      userId = newUser.id;
     })
     .catch((err) => {
-      console.log(error);
-      userId = 1;
+      console.log(err);
     });
 };
 
@@ -23,32 +27,49 @@ const pushNewLocation = (long, lat) => {
   }
   console.log(userId);
 
-  fetch(`${baseUrl}/api/changeLoc?id=${userId}&long=${long}&lat=${lat}`)
+  fetch(`${BASE_URL}/api/changeloc?id=${userId}&long=${long}&lat=${lat}`, {
+    method: 'POST',
+  })
     .then((response) => {
       return response.json();
     })
-    .then((isNear) => {
-      if (isNear) {
+    .then((isnear) => {
+      if (isnear) {
         alert('Found someone!');
       }
-      console.log(isNear);
+      console.log(isnear);
     })
-    .catch((err) => console.log(error));
+    .catch((err) => console.log(err));
 };
 
 //
 const startSearch = () => {
-  fetch(`${baseUrl}/api/startSearch?id=${userId}&long=${long}&lat=${lat}`)
+  fetch(`${BASE_URL}/api/startsearch?id=${userId}`, {
+    method: 'POST',
+  })
     .then((response) => {
       return response.json();
     })
-    .then((isNear) => {
-      if (isNear) {
+    .then((isnear) => {
+      if (isnear) {
         alert('Found someone!');
       }
-      console.log(isNear);
+      console.log(isnear);
     })
-    .catch((err) => console.log(error));
+    .catch((err) => console.log(err));
 };
 
-export { startSearch, pushNewLocation, createNewUser };
+const stopSearch = () => {
+  fetch(`${BASE_URL}/api/stopsearch?id=${userId}`, {
+    method: 'POST',
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then((_) => {
+      console.log('Stopped searching');
+    })
+    .catch((err) => console.log(err));
+};
+
+export { startSearch, stopSearch, pushNewLocation, createNewUser };
