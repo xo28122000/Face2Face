@@ -1,6 +1,7 @@
 import { BASE_URL } from './env.js';
 
 let userId;
+let isSearching = false;
 
 const createNewUser = (long, lat) => {
   console.log(long, lat);
@@ -22,6 +23,7 @@ const createNewUser = (long, lat) => {
 };
 
 const pushNewLocation = (long, lat) => {
+  if (!isSearching) return;
   if (!userId) {
     console.warn('Would send new location, but no userId found');
     return;
@@ -62,6 +64,7 @@ const startSearch = () => {
       return response.json();
     })
     .then((isnear) => {
+      isSearching = true;
       if (isnear) {
         alert('Found someone!');
       }
@@ -82,6 +85,7 @@ const stopSearch = () => {
       return response.json();
     })
     .then((_) => {
+      isSearching = false;
       console.log('Stopped searching');
     })
     .catch((err) => console.log(err));
