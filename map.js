@@ -75,10 +75,6 @@ document.getElementById('startSearchButton').addEventListener('click', () => {
   currentlySearching = !currentlySearching;
 });
 
-$(window).on('beforeunload', () => {
-  stopSearch();
-});
-
 window.onbeforeunload = () => {
   stopSearch();
 };

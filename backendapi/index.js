@@ -20,11 +20,13 @@ function between(x, min, max) {
 function isNear(id) {
   //   console.log(users[id].issearchable);
   if (users[id].issearchable) {
+    var usersInArea = [];
     uLat = users[id].lat;
     uLong = users[id].long;
-    console.log(uLat, uLong);
+    // console.log(uLat, uLong);
     for (var i = 0; i < users.length; i++) {
       if (i !== id && users[i].issearchable) {
+        // console.log(i);
         console.log(
           getDistanceFromLatLonInKm(uLat, uLong, users[i].lat, users[i].long) *
             1000
@@ -32,9 +34,9 @@ function isNear(id) {
         if (
           getDistanceFromLatLonInKm(uLat, uLong, users[i].lat, users[i].long) *
             1000 <=
-          30
+          40
         ) {
-          return true;
+          usersInArea.push(i);
         } else {
         }
         // if (
@@ -47,9 +49,12 @@ function isNear(id) {
         // }
       }
     }
+    if (usersInArea.length > 0) {
+      return { isnear: true, usersInArea: usersInArea };
+    }
   }
 
-  return false;
+  return { isnear: false };
 }
 // console.log(isNear(0));
 
@@ -72,7 +77,7 @@ app.post("/api/newuser", (req, res) => {
 });
 app.post("/api/startsearch", (req, res) => {
   users[req.body.id].issearchable = true;
-  res.send({ isnear: isNear(req.body.id) });
+  res.send(isNear(req.body.id));
 });
 app.post("/api/stopsearch", (req, res) => {
   users[req.body.id].issearchable = false;
@@ -82,7 +87,7 @@ app.post("/api/changeloc", (req, res) => {
   console.log("frontend seach for changeloc");
   users[req.body.id].lat = req.body.lat;
   users[req.body.id].long = req.body.long;
-  res.send({ isnear: isNear(req.body.id) });
+  res.send(isNear(req.body.id));
 });
 // app.post("/api/isnear", (req, res) => {
 //   res.send({ isnear: isNear(req.body.id) });
