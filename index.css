@@ -1,0 +1,15 @@
+#mapContainer {
+  align: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5rem;
+  z-index: inherit;
+}
+
+.main-container {
+  /* background-color: aqua; */
+  height: 600px;
+  width: 900px;
+  background-color: antiquewhite;
+  z-index: 1;
+}

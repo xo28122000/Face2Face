@@ -5,6 +5,7 @@ import {
   createNewUser,
   pushNewLocation,
 } from './search-functions.js';
+import { MVRS_API_KEY } from './env.js';
 //  getting geolocation
 
 // object returned :
@@ -17,8 +18,12 @@ import {
 // speed: null
 // ----------------------
 
+// create your .env file with your API_KEY
+// export const API_KEY='${VALUE}'
+// add it to your apiKey object
+
 var platform = new H.service.Platform({
-  apikey: '',
+  apikey: MVRS_API_KEY,
 });
 var geocoder = platform.getGeocodingService();
 
@@ -45,7 +50,6 @@ function initmap() {
           },
         }
       );
-
       addListeners(map);
       makeMapInteractive(map, maptypes);
       createNewUser(long, lat);
