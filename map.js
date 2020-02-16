@@ -15,7 +15,6 @@ import addListeners from './listeners.js';
 var platform = new H.service.Platform({
   apikey: '',
 });
-o;
 var geocoder = platform.getGeocodingService();
 
 // Obtain the default map types from the platform object
