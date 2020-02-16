@@ -61,22 +61,21 @@ const pushNewLocation = (long, lat) => {
       return response.json();
     })
     .then((obj) => {
-      console.log(obj);
       if (obj.isnear) {
-        alert('Found someone!');
+        handleUsersInArea(obj.usersInArea);
       }
-      console.log(obj.isnear);
     })
     .catch((err) => console.log(err));
 };
 
 //
-const startSearch = () => {
+const startSearch = (params) => {
   fetch(`${BASE_URL}/api/startsearch`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       id: userId,
+      ...params,
     }),
   })
     .then((response) => {
@@ -86,9 +85,8 @@ const startSearch = () => {
       console.log(obj);
       isSearching = true;
       if (obj.isnear) {
-        alert('Found someone!');
+        handleUsersInArea(obj.usersInArea);
       }
-      console.log(obj.isnear);
       startSearchInterval();
     })
     .catch((err) => console.log(err));
@@ -114,6 +112,17 @@ const startSearchInterval = () => {
   setInterval(() => {
     pushNewLocation(lastLong, lastLat);
   }, 20000);
+};
+
+const handleUsersInArea = (usersInArea) => {
+  $('#result-list').empty();
+  $('#result-list').append('<ul id="list"></ul>');
+  usersInArea.forEach((user) => {
+    console.log(user);
+    $('#list').append(
+      `<li>User ${user.id} says: ${user.description}. They're up to: ${user.topics}</li>`
+    );
+  });
 };
 
 const stopSearchInterval = () => {

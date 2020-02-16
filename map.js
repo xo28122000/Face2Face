@@ -69,7 +69,7 @@ document.getElementById('startSearchButton').addEventListener('click', () => {
   if (currentlySearching) {
     handleStopSearch();
   } else {
-    handleStartSearch(long, lat);
+    handleStartSearch();
   }
 
   currentlySearching = !currentlySearching;

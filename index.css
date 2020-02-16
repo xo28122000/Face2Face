@@ -82,7 +82,3 @@ body {
   display: flex;
   justify-content: center;
 }
-
-#result-list {
-  visibility: hidden;
-}

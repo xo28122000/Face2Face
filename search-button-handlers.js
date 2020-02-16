@@ -1,11 +1,12 @@
 import { stopSearch, startSearch } from './search-functions.js';
 
 let showingSearchForm = true;
+$('#result-list').hide();
 
-const handleStartSearch = (long, lat) => {
+const handleStartSearch = () => {
   const search = getSearchObjectFromForm();
   console.log(search);
-  startSearch(long, lat);
+  startSearch(search);
   console.log('Starting Search');
   document.getElementById('startSearchButton').innerHTML =
     'Let the search be over';

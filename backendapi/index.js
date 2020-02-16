@@ -1,6 +1,6 @@
-const express = require("express");
+const express = require('express');
 const app = express();
-const bodyParser = require("body-parser");
+const bodyParser = require('body-parser');
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -10,7 +10,7 @@ const port = 5001;
 //   { id: 2, lat: 37.788659, long: -127.397612 }
 users = [
   { id: 0, lat: 37.787659, long: -122.3965, issearchable: false },
-  { id: 1, lat: 37.787729, long: -122.3965, issearchable: false }
+  { id: 1, lat: 37.787729, long: -122.3965, issearchable: false },
 ];
 const offset = 0.0001;
 const testoffset = 0.00005;
@@ -21,22 +21,37 @@ function isNear(id) {
   //   console.log(users[id].issearchable);
   if (users[id].issearchable) {
     var usersInArea = [];
+    const searchingUser = users[id];
     uLat = users[id].lat;
     uLong = users[id].long;
     // console.log(uLat, uLong);
     for (var i = 0; i < users.length; i++) {
       if (i !== id && users[i].issearchable) {
-        // console.log(i);
+        const otherUser = users[i];
         console.log(
-          getDistanceFromLatLonInKm(uLat, uLong, users[i].lat, users[i].long) *
-            1000
+          getDistanceFromLatLonInKm(
+            uLat,
+            uLong,
+            otherUser.lat,
+            otherUser.long
+          ) * 1000
         );
+        const toleratedDistance = Math.min(
+          searchingUser.distance,
+          otherUser.distance
+        );
+        const matchingTopics = getMatchingTopics(searchingUser, otherUser);
         if (
           getDistanceFromLatLonInKm(uLat, uLong, users[i].lat, users[i].long) *
             1000 <=
-          40
+            toleratedDistance &&
+          matchingTopics.length > 0
         ) {
-          usersInArea.push(i);
+          usersInArea.push({
+            id: i,
+            topics: matchingTopics,
+            description: otherUser.description,
+          });
         } else {
         }
         // if (
@@ -58,33 +73,38 @@ function isNear(id) {
 }
 // console.log(isNear(0));
 
-app.get("/", (req, res) => {
-  res.send("hey!");
+app.get('/', (req, res) => {
+  res.send('hey!');
 });
-app.get("/api/users", (req, res) => {
+app.get('/api/users', (req, res) => {
   res.send(users);
 });
-app.post("/api/newuser", (req, res) => {
+app.post('/api/newuser', (req, res) => {
   var newuser = {
     id: users.length,
     lat: req.body.lat,
     long: req.body.long,
-    issearchable: false
+    issearchable: false,
   };
   users.push(newuser);
   console.log(`new user is pushed with id:${users.length - 1}`);
   res.send({ id: users.length - 1 });
 });
-app.post("/api/startsearch", (req, res) => {
-  users[req.body.id].issearchable = true;
-  res.send(isNear(req.body.id));
+app.post('/api/startsearch', (req, res) => {
+  console.log(req.body);
+  const body = req.body;
+  users[body.id].issearchable = true;
+  users[body.id].distance = body.distance;
+  users[body.id].description = body.description;
+  users[body.id].topics = body.topics;
+  res.send(isNear(body.id));
 });
-app.post("/api/stopsearch", (req, res) => {
+app.post('/api/stopsearch', (req, res) => {
   users[req.body.id].issearchable = false;
-  res.send("done");
+  res.send('done');
 });
-app.post("/api/changeloc", (req, res) => {
-  console.log("frontend seach for changeloc");
+app.post('/api/changeloc', (req, res) => {
+  console.log('frontend seach for changeloc');
   users[req.body.id].lat = req.body.lat;
   users[req.body.id].long = req.body.long;
   res.send(isNear(req.body.id));
@@ -111,4 +131,10 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
 
 function deg2rad(deg) {
   return deg * (Math.PI / 180);
+}
+
+function getMatchingTopics(searchingUser, otherUser) {
+  return searchingUser.topics.filter(
+    (value) => -1 !== otherUser.topics.indexOf(value)
+  );
 }
