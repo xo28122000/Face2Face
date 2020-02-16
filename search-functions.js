@@ -28,8 +28,14 @@ const pushNewLocation = (long, lat) => {
   }
   console.log(userId);
 
-  fetch(`${BASE_URL}/api/changeloc?id=${userId}&long=${long}&lat=${lat}`, {
+  fetch(`${BASE_URL}/api/changeloc`, {
     method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      id: userId,
+      long,
+      lat,
+    }),
   })
     .then((response) => {
       return response.json();
@@ -45,8 +51,12 @@ const pushNewLocation = (long, lat) => {
 
 //
 const startSearch = () => {
-  fetch(`${BASE_URL}/api/startsearch?id=${userId}`, {
+  fetch(`${BASE_URL}/api/startsearch`, {
     method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      id: userId,
+    }),
   })
     .then((response) => {
       return response.json();
@@ -61,8 +71,12 @@ const startSearch = () => {
 };
 
 const stopSearch = () => {
-  fetch(`${BASE_URL}/api/stopsearch?id=${userId}`, {
+  fetch(`${BASE_URL}/api/stopsearch`, {
     method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      id: userId,
+    }),
   })
     .then((response) => {
       return response.json();
