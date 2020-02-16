@@ -25,6 +25,7 @@ function isNear(id) {
     uLat = users[id].lat;
     uLong = users[id].long;
     // console.log(uLat, uLong);
+    console.log(id);
     for (var i = 0; i < users.length; i++) {
       if (i !== id && users[i].issearchable) {
         const otherUser = users[i];
@@ -134,6 +135,8 @@ function deg2rad(deg) {
 }
 
 function getMatchingTopics(searchingUser, otherUser) {
+  console.log(searchingUser);
+  console.log(otherUser);
   return searchingUser.topics.filter(
     (value) => -1 !== otherUser.topics.indexOf(value)
   );

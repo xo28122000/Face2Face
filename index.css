@@ -20,8 +20,8 @@ body {
   /* margin-left: 10rem; */
 
   z-index: 1;
-  width: 400px;
-  height: 400px;
+  width: 90%;
+  height: 90%;
   display: flex;
 }
 
@@ -37,7 +37,7 @@ body {
 }
 
 .content-container {
-  flex: 0.8;
+  flex: 0.7;
   display: flex;
   flex-direction: row;
 }
@@ -81,4 +81,18 @@ body {
 .centerChildren {
   display: flex;
   justify-content: center;
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #f8f9fa !important;
+  color: black;
+  text-align: center;
+}
+
+#footer-text {
+  margin: 10px;
 }
