@@ -1,4 +1,5 @@
 import makeMapInteractive from './interactivity.js';
+import addListeners from './listeners.js';
 //  getting geolocation
 
 // object returned :
@@ -14,6 +15,8 @@ import makeMapInteractive from './interactivity.js';
 var platform = new H.service.Platform({
   apikey: '',
 });
+o;
+var geocoder = platform.getGeocodingService();
 
 // Obtain the default map types from the platform object
 var maptypes = platform.createDefaultLayers();
@@ -22,43 +25,30 @@ var maptypes = platform.createDefaultLayers();
 var map;
 initmap();
 
-function initmap(callbacks) {
-  var allowGeolocation = false;
-  var userlat = 0;
-  var userlong = 0;
+function initmap() {
   if (navigator.geolocation) {
-    allowGeolocation = true;
     navigator.geolocation.getCurrentPosition((position) => {
-      console.log(position.coords.latitude, position.coords.longitude);
-      userlat = position.coords.latitude;
-      userlong = position.coords.longitude;
-
-      console.log(userlat, userlong);
-
       map = new H.Map(
         document.getElementById('mapContainer'),
         maptypes.vector.normal.map,
         {
           zoom: 18,
-          center: { lng: userlong, lat: userlat },
+          center: {
+            lng: position.coords.longitude,
+            lat: position.coords.latitude,
+          },
         }
       );
-      const marker = new H.map.Marker({ lng: userlong, lat: userlat });
-      map.addObject(marker);
-      var mapEvents = new H.mapevents.MapEvents(map);
 
-      map.addEventListener('drag', function(evt) {
-        // Log 'tap' and 'mouse' events:
-        console.log(evt.type, evt.currentPointer.type);
-      });
-
-      map.addEventListener('tap', function(evt) {
-        // Log 'tap' and 'mouse' events:
-        console.log(evt.type, evt.currentPointer.type);
-        console.log(evt);
-      });
-
+      addListeners(map);
       makeMapInteractive(map, maptypes);
+    });
+    navigator.geolocation.watchPosition(function(position) {
+      const marker = new H.map.Marker({
+        lng: position.coords.longitude,
+        lat: position.coords.latitude,
+      });
+      map.addObject(marker);
     });
   } else {
     console.error('Geolocation is not supported by this browser!');
