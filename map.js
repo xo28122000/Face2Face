@@ -1,12 +1,15 @@
 import makeMapInteractive from './interactivity.js';
 import addListeners from './listeners.js';
 import {
-  startSearch,
   createNewUser,
   pushNewLocation,
   stopSearch,
 } from './search-functions.js';
 import { MVRS_API_KEY } from './env.js';
+import {
+  handleStartSearch,
+  handleStopSearch,
+} from './search-button-handlers.js';
 
 let long;
 let lat;
@@ -45,26 +48,18 @@ function initmap() {
       createNewUser(long, lat);
     });
 
-    setInterval(() => {
-      navigator.geolocation.getCurrentPosition((position) => {
-        long = position.coords.longitude;
-        lat = position.coords.latitude;
+    navigator.geolocation.watchPosition(function(position) {
+      long = position.coords.longitude;
+      lat = position.coords.latitude;
 
-        console.log(long, lat);
-
-        const marker = new H.map.Marker({
-          lng: long,
-          lat: lat,
-        });
-        map.addObject(marker);
-        pushNewLocation(long, lat);
+      const marker = new H.map.Marker({
+        lng: long,
+        lat: lat,
       });
-    }, 1000);
-    // navigator.geolocation.watchPosition(function(position) {
-    //   long = position.coords.longitude;
-    //   lat = position.coords.latitude;
-    //   pushNewLocation(long, lat);
-    // });
+      map.addObject(marker);
+
+      pushNewLocation(long, lat);
+    });
   } else {
     console.error('Geolocation is not supported by this browser!');
   }
@@ -72,13 +67,9 @@ function initmap() {
 
 document.getElementById('startSearchButton').addEventListener('click', () => {
   if (currentlySearching) {
-    stopSearch();
-    console.log('Ending Search');
-    document.getElementById('startSearchButton').innerHTML = 'START';
+    handleStopSearch();
   } else {
-    startSearch(long, lat);
-    console.log('Starting Search');
-    document.getElementById('startSearchButton').innerHTML = 'STOP';
+    handleStartSearch(long, lat);
   }
 
   currentlySearching = !currentlySearching;

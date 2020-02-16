@@ -32,23 +32,99 @@
       type="text/css"
       href="https://js.api.here.com/v3/3.1/mapsjs-ui.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+
     <script src="./map.js" type="module"></script>
     <script src="./search-functions.js" type="module"></script>
   </head>
   <body>
     <div class="main-container">
-      <div class="left-container">
-        <div id="mapContainer"></div>
+      <div class="header-bar">
+        <h1>
+          Welcome to Meet-Me
+        </h1>
       </div>
-      <div class="right-container">
-        <div class="search-event-button">
-          <button
-            type="button"
-            class="search-event-button-style button-shadow"
-            id="startSearchButton"
-          >
-            Start Search
+      <div class="content-container">
+        <div class="left-container">
+          <div id="mapContainer"></div>
+        </div>
+        <div class="right-container">
+          <form id="search-form">
+            <p>What are you up to do?</p>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value=""
+                id="techCheckbox"
+              />
+              <label class="form-check-label" for="techCheckbox">
+                Built the most awesome Hackathon project ever
+              </label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value=""
+                id="mtgCheckbox"
+              />
+              <label class="form-check-label" for="mtgCheckbox">
+                Play some mtg
+              </label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value=""
+                id="nerdCheckbox"
+              />
+              <label class="form-check-label" for="nerdCheckbox">
+                Just nerd out
+              </label>
+            </div>
+            <br />
+            <div class="form-group">
+              <label for="exampleInputPassword1"
+                >Distance to search for awesome people</label
+              >
+              <input
+                type="number"
+                class="form-control"
+                id="distanceInput"
+                placeholder="100m"
+              />
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlTextarea1"
+                >Describe your plans!</label
+              >
+              <textarea
+                class="form-control"
+                id="descriptionInput"
+                rows="2"
+              ></textarea>
+            </div>
+          </form>
+          <div id="result-list"></div>
+          <button id="startSearchButton" class="btn btn-primary">
+            Let the search begin
           </button>
+          <!-- <div class="search-event-button">
+            <button
+              type="button"
+              class="search-event-button-style button-shadow"
+              id="startSearchButton"
+            >
+              Start Search
+            </button>
+          </div> -->
         </div>
       </div>
     </div>

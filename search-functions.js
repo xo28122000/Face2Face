@@ -1,5 +1,7 @@
 import { BASE_URL } from './env.js';
 
+const USER_ID = 'user-id';
+
 let userId;
 let isSearching = false;
 
@@ -7,7 +9,17 @@ let lastLong = 0;
 let lastLat = 0;
 
 const createNewUser = (long, lat) => {
-  console.log(long, lat);
+  const storedId = window.localStorage.getItem(USER_ID);
+  console.log(storedId);
+
+  if (storedId) {
+    userId = storedId;
+  } else {
+    createUserOnServer(long, lat);
+  }
+};
+
+const createUserOnServer = (long, lat) => {
   fetch(`${BASE_URL}/api/newuser`, {
     method: 'POST',
     body: JSON.stringify({ long, lat }),
@@ -19,6 +31,7 @@ const createNewUser = (long, lat) => {
     .then((newUser) => {
       console.log(newUser);
       userId = newUser.id;
+      window.localStorage.setItem(USER_ID, userId);
     })
     .catch((err) => {
       console.log(err);
@@ -48,6 +61,7 @@ const pushNewLocation = (long, lat) => {
       return response.json();
     })
     .then((obj) => {
+      console.log(obj);
       if (obj.isnear) {
         alert('Found someone!');
       }
@@ -69,6 +83,7 @@ const startSearch = () => {
       return response.json();
     })
     .then((obj) => {
+      console.log(obj);
       isSearching = true;
       if (obj.isnear) {
         alert('Found someone!');
