@@ -7,6 +7,7 @@ const createNewUser = (long, lat) => {
   fetch(`${BASE_URL}/api/newuser`, {
     method: 'POST',
     body: JSON.stringify({ long, lat }),
+    headers: { 'Content-Type': 'application/json' },
   })
     .then((response) => {
       return response.json();

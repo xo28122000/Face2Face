@@ -1,6 +1,10 @@
-const express = require("express");
+const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
+
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 const port = 5001;
 // { id: 1, lat: 37.787729, long: -127.396699 },
 //   { id: 2, lat: 37.788659, long: -127.397612 }
@@ -26,32 +30,32 @@ function isNear(id) {
   return false;
 }
 
-app.get("/", (req, res) => {
-  res.send("hey!");
+app.get('/', (req, res) => {
+  res.send('hey!');
 });
-app.get("/api/users", (req, res) => {
+app.get('/api/users', (req, res) => {
   res.send(users);
 });
-app.post("/api/newuser", (req, res) => {
+app.post('/api/newuser', (req, res) => {
   console.log(req.body);
   var newuser = {
     id: users.length,
     lat: req.body.lat,
     long: req.body.long,
-    issearchable: false
+    issearchable: false,
   };
   users.push(newuser);
   res.send({ id: users.length - 1 });
 });
-app.post("/api/startsearch", (req, res) => {
+app.post('/api/startsearch', (req, res) => {
   users[req.body.id].issearchable = true;
   res.send({ isnear: isNear(req.body.id) });
 });
-app.post("/api/stopsearch", (req, res) => {
+app.post('/api/stopsearch', (req, res) => {
   users[req.body.id].issearchable = false;
-  res.send("done");
+  res.send('done');
 });
-app.post("/api/changeloc", (req, res) => {
+app.post('/api/changeloc', (req, res) => {
   users[req.body.id].lat = req.body.lat;
   users[req.body.id].long = req.body.long;
   res.send({ isnear: isNear(req.body.id) });
