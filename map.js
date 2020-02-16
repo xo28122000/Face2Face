@@ -17,3 +17,8 @@ var map = new H.Map(
 
 const marker = new H.map.Marker({ lng: -122.431297, lat: 37.773972 });
 map.addObject(marker);
+
+var ui = H.ui.UI.createDefault(map, maptypes);
+console.log(ui);
+const zoomControl = ui.getControl('zoom');
+console.log(zoomControl);
