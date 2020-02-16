@@ -52,6 +52,10 @@ function isNear(id) {
             id: i,
             topics: matchingTopics,
             description: otherUser.description,
+            location: {
+              lat: 37.785688,
+              long: -122.400945,
+            },
           });
         } else {
         }
