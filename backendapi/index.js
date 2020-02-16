@@ -48,6 +48,7 @@ function isNear(id) {
             toleratedDistance &&
           matchingTopics.length > 0
         ) {
+          // Getting something from amadeus
           usersInArea.push({
             id: i,
             topics: matchingTopics,
@@ -145,3 +146,30 @@ function getMatchingTopics(searchingUser, otherUser) {
     (value) => -1 !== otherUser.topics.indexOf(value)
   );
 }
+
+const getAmadeusStuff = async () => {
+  return fetch('https://test.api.amadeus.com/v1/security/oauth2/token ', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: 'grant_type=client_credentials&client_id={}&client_secret={}',
+  })
+    .then((res) => {
+      // console.log(res);
+      return res.json();
+    })
+    .then((resobj) => {
+      console.log(resobj);
+      var actoken = 'Bearer ' + resobj.access_token;
+      fetch(
+        'https://test.api.amadeus.com/v1/reference-data/locations/pois?latitude=37.773972&longitude=-122.431297',
+        { headers: { Authorization: actoken } }
+      )
+        .then((res) => {
+          return res.json();
+        })
+        .then((x) => {
+          console.log(x);
+          return x;
+        });
+    });
+};
