@@ -7,6 +7,12 @@
       type="text/javascript"
       charset="utf-8"
     ></script>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
     <script
       src="https://js.api.here.com/v3/3.1/mapsjs-service.js"
       type="text/javascript"
@@ -36,19 +42,22 @@
     <script src="./search-functions.js" type="module"></script>
   </head>
   <body>
-    <div class="main-container">
-      <div class="left-container">
-        <div id="mapContainer"></div>
-      </div>
-      <div class="right-container">
-        <div class="search-event-button">
-          <button
-            type="button"
-            class="search-event-button-style button-shadow"
-            id="startSearchButton"
-          >
-            Start Search
-          </button>
+    <div class="containerfluid screencenter">
+      <div class="row" style="height:100%">
+        <div class="col-6" style="background-color: #9b9b9b;">
+          <div id="mapContainer"></div>
+        </div>
+        <div class="col-6" style="background-color: #ebebeb;padding: 15px">
+          <div
+            id="scrollview"
+            class="row"
+            style="background-color: #464646"
+          ></div>
+          <div class="centerChildren">
+            <button class="btn btn-dark" type="button" id="startSearchButton">
+              Start Search
+            </button>
+          </div>
         </div>
       </div>
     </div>

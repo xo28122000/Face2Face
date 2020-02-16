@@ -1,19 +1,19 @@
-import makeMapInteractive from './interactivity.js';
-import addListeners from './listeners.js';
+import makeMapInteractive from "./interactivity.js";
+import addListeners from "./listeners.js";
 import {
   startSearch,
   createNewUser,
   pushNewLocation,
-  stopSearch,
-} from './search-functions.js';
-import { MVRS_API_KEY } from './env.js';
+  stopSearch
+} from "./search-functions.js";
+import { MVRS_API_KEY } from "./env.js";
 
 let long;
 let lat;
 let currentlySearching = false;
 
 var platform = new H.service.Platform({
-  apikey: MVRS_API_KEY,
+  apikey: MVRS_API_KEY
 });
 var geocoder = platform.getGeocodingService();
 
@@ -26,18 +26,18 @@ initmap();
 
 function initmap() {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition((position) => {
+    navigator.geolocation.getCurrentPosition(position => {
       long = position.coords.longitude;
       lat = position.coords.latitude;
       map = new H.Map(
-        document.getElementById('mapContainer'),
+        document.getElementById("mapContainer"),
         maptypes.vector.normal.map,
         {
           zoom: 18,
           center: {
             lng: long,
-            lat: lat,
-          },
+            lat: lat
+          }
         }
       );
       addListeners(map);
@@ -46,7 +46,7 @@ function initmap() {
     });
 
     setInterval(() => {
-      navigator.geolocation.getCurrentPosition((position) => {
+      navigator.geolocation.getCurrentPosition(position => {
         long = position.coords.longitude;
         lat = position.coords.latitude;
 
@@ -54,8 +54,10 @@ function initmap() {
 
         const marker = new H.map.Marker({
           lng: long,
-          lat: lat,
+          lat: lat
         });
+
+        map.removeObjects(map.getObjects());
         map.addObject(marker);
         pushNewLocation(long, lat);
       });
@@ -66,26 +68,22 @@ function initmap() {
     //   pushNewLocation(long, lat);
     // });
   } else {
-    console.error('Geolocation is not supported by this browser!');
+    console.error("Geolocation is not supported by this browser!");
   }
 }
 
-document.getElementById('startSearchButton').addEventListener('click', () => {
+document.getElementById("startSearchButton").addEventListener("click", () => {
   if (currentlySearching) {
     stopSearch();
-    console.log('Ending Search');
-    document.getElementById('startSearchButton').innerHTML = 'START';
+    console.log("Ending Search");
+    document.getElementById("startSearchButton").innerHTML = "START";
   } else {
     startSearch(long, lat);
-    console.log('Starting Search');
-    document.getElementById('startSearchButton').innerHTML = 'STOP';
+    console.log("Starting Search");
+    document.getElementById("startSearchButton").innerHTML = "STOP";
   }
 
   currentlySearching = !currentlySearching;
-});
-
-$(window).on('beforeunload', () => {
-  stopSearch();
 });
 
 window.onbeforeunload = () => {
